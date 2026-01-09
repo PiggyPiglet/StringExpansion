@@ -7,7 +7,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import com.google.common.collect.ImmutableMap;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -21,6 +23,7 @@ import org.jetbrains.annotations.NotNull;
 public class StringExpansion extends PlaceholderExpansion implements Configurable {
 
     private final Map<String, ReplacementConfiguration> replacementConfigurations = new HashMap<>();
+    private final Map<String, Pattern> patterns = new ConcurrentHashMap<>();
     private final String separator;
 
     public StringExpansion() {
@@ -60,7 +63,7 @@ public class StringExpansion extends PlaceholderExpansion implements Configurabl
 
     @Override
     public @NotNull String getVersion() {
-        return "1.0.7";
+        return "1.0.8";
     }
 
     @Override
@@ -239,6 +242,25 @@ public class StringExpansion extends PlaceholderExpansion implements Configurabl
                 }
 
                 return String.valueOf(StringUtils.countOccurrences(split[1], split[2]));
+            case "regex":
+                split = arguments.split(separator, 2);
+                if (split.length < 2) {
+                    return null;
+                }
+
+                final Pattern pattern;
+                if (patterns.containsKey(split[1])) {
+                    pattern = patterns.get(split[1]);
+                } else {
+                    try {
+                        pattern = Pattern.compile(split[1]);
+                        patterns.put(split[1], pattern);
+                    } catch (PatternSyntaxException exception) {
+                        return "Invalid Pattern";
+                    }
+                }
+
+                return getBoolean(pattern.matcher(split[0]).matches());
         }
 
         return null;
