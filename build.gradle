@@ -1,22 +1,22 @@
 plugins {
     id 'java'
-    id 'com.github.johnrengelman.shadow' version '7.0.0'
+    id 'com.gradleup.shadow' version '9.3.1'
 }
 
 group 'com.blitzoffline'
-version '1.0.8'
+version '1.0.0'
 
 repositories {
     mavenCentral()
-    maven { url = "https://repo.papermc.io/repository/maven-public/" }
     maven { url = "https://repo.helpch.at/releases/" }
+    maven { url = "https://repo.codemc.io/repository/hytale/" }
 }
 
 dependencies {
     compileOnly 'org.jetbrains:annotations:24.1.0'
 
-    compileOnly 'me.clip:placeholderapi:2.11.6'
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'at.helpch:placeholderapi-hytale:1.0.4'
+    compileOnly("com.hypixel.hytale:Server:2026.01.17-4b0f30090")
 }
 
 compileJava.options.encoding = 'UTF-8'
